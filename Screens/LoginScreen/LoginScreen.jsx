@@ -20,7 +20,6 @@ const LoginScreen = () => {
     console.log(state);
     setState(initialState);
   };
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
