@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   Text,
   Platform,
+  Keyboard,
+  ImageBackground,
+  TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from "react-native";
 
@@ -15,7 +18,7 @@ const initialState = {
   password: "",
 };
 
-const RegistrationScreen = () => {
+const RegistrationScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
 
   const submitForm = () => {
@@ -24,59 +27,88 @@ const RegistrationScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.form}
-    >
-      <View style={styles.photoBlock}>
-        <View style={styles.plusBtn}>
-          <Text style={styles.plus}>+</Text>
-        </View>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <ImageBackground
+          style={styles.imageBackground}
+          source={require("../../assets/images/background-img.png")}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.form}
+          >
+            <View style={styles.photoBlock}>
+              <View style={styles.plusBtn}>
+                <Text style={styles.plus}>+</Text>
+              </View>
+            </View>
+            <Text style={styles.title}>Registration</Text>
+            <TextInput
+              style={styles.input}
+              placeholder={"Login"}
+              placeholderTextColor={"#BDBDBD"}
+              value={state.name}
+              onChangeText={(value) =>
+                setState((prevState) => ({ ...prevState, name: value }))
+              }
+            />
+            <TextInput
+              style={styles.input}
+              placeholder={"E-mail"}
+              placeholderTextColor={"#BDBDBD"}
+              value={state.email}
+              onChangeText={(value) =>
+                setState((prevState) => ({ ...prevState, email: value }))
+              }
+            />
+            <TextInput
+              secureTextEntry={true}
+              style={styles.input}
+              placeholder={"Password"}
+              placeholderTextColor={"#BDBDBD"}
+              value={state.password}
+              onChangeText={(value) =>
+                setState((prevState) => ({ ...prevState, password: value }))
+              }
+            />
+            <TouchableOpacity
+              style={styles.btn}
+              activeOpacity={0.5}
+              onPress={submitForm}
+            >
+              <Text style={styles.btnTitle}>Register</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.text}>
+              Already have an account?{" "}
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => navigation.navigate("Login")}
+              >
+                <Text style={styles.navigationText}>Log in</Text>
+              </TouchableOpacity>
+            </Text>
+          </KeyboardAvoidingView>
+        </ImageBackground>
       </View>
-      <Text style={styles.title}>Registration</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={"Login"}
-        placeholderTextColor={"#BDBDBD"}
-        value={state.name}
-        onChangeText={(value) =>
-          setState((prevState) => ({ ...prevState, name: value }))
-        }
-      />
-      <TextInput
-        style={styles.input}
-        placeholder={"E-mail"}
-        placeholderTextColor={"#BDBDBD"}
-        value={state.email}
-        onChangeText={(value) =>
-          setState((prevState) => ({ ...prevState, email: value }))
-        }
-      />
-      <TextInput
-        secureTextEntry={true}
-        style={styles.input}
-        placeholder={"Password"}
-        placeholderTextColor={"#BDBDBD"}
-        value={state.password}
-        onChangeText={(value) =>
-          setState((prevState) => ({ ...prevState, password: value }))
-        }
-      />
-      <TouchableOpacity
-        style={styles.btn}
-        activeOpacity={0.5}
-        onPress={submitForm}
-      >
-        <Text style={styles.btnTitle}>Register</Text>
-      </TouchableOpacity>
-      <Text style={styles.text}>Already have an account? Log in</Text>
-    </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
 export default RegistrationScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+
+  imageBackground: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "flex-end",
+  },
+
   form: {
     flex: 0.75,
     backgroundColor: "#FFFFFF",
@@ -147,8 +179,13 @@ const styles = StyleSheet.create({
   },
 
   text: {
+    lineHeight: 22,
     marginTop: 16,
     alignSelf: "center",
     color: "rgba(27, 67, 113, 1)",
+  },
+
+  navigationText: {
+    color: "#00008b",
   },
 });

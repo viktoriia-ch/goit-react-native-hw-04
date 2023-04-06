@@ -1,11 +1,15 @@
 import { useState } from "react";
 import {
+  View,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   Text,
   Platform,
+  Keyboard,
   KeyboardAvoidingView,
+  ImageBackground,
+  TouchableWithoutFeedback,
 } from "react-native";
 
 const initialState = {
@@ -13,7 +17,7 @@ const initialState = {
   password: "",
 };
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
 
   const submitForm = () => {
@@ -21,48 +25,76 @@ const LoginScreen = () => {
     setState(initialState);
   };
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.form}
-    >
-      <Text style={styles.title}>Login</Text>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <ImageBackground
+          style={styles.imageBackground}
+          source={require("../../assets/images/background-img.png")}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.form}
+          >
+            <Text style={styles.title}>Login</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder={"E-mail"}
-        placeholderTextColor={"#BDBDBD"}
-        value={state.email}
-        onChangeText={(value) =>
-          setState((prevState) => ({ ...prevState, email: value }))
-        }
-      />
+            <TextInput
+              style={styles.input}
+              placeholder={"E-mail"}
+              placeholderTextColor={"#BDBDBD"}
+              value={state.email}
+              onChangeText={(value) =>
+                setState((prevState) => ({ ...prevState, email: value }))
+              }
+            />
 
-      <TextInput
-        secureTextEntry={true}
-        style={styles.input}
-        placeholder={"Password"}
-        placeholderTextColor={"#BDBDBD"}
-        value={state.password}
-        onChangeText={(value) =>
-          setState((prevState) => ({ ...prevState, password: value }))
-        }
-      />
+            <TextInput
+              secureTextEntry={true}
+              style={styles.input}
+              placeholder={"Password"}
+              placeholderTextColor={"#BDBDBD"}
+              value={state.password}
+              onChangeText={(value) =>
+                setState((prevState) => ({ ...prevState, password: value }))
+              }
+            />
+            <TouchableOpacity
+              style={styles.btn}
+              activeOpacity={0.5}
+              onPress={submitForm}
+            >
+              <Text style={styles.btnTitle}>Login</Text>
+            </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.btn}
-        activeOpacity={0.5}
-        onPress={submitForm}
-      >
-        <Text style={styles.btnTitle}>Login</Text>
-      </TouchableOpacity>
-      <Text style={styles.text}>Don't have an account? Register</Text>
-    </KeyboardAvoidingView>
+            <Text style={styles.text}>
+              Don't have an account?{" "}
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => navigation.navigate("Registration")}
+              >
+                <Text style={styles.navigationText}>Register</Text>
+              </TouchableOpacity>
+            </Text>
+          </KeyboardAvoidingView>
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+
+  imageBackground: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "flex-end",
+  },
+
   form: {
     flex: 0.5,
     backgroundColor: "#FFFFFF",
@@ -105,8 +137,13 @@ const styles = StyleSheet.create({
   },
 
   text: {
+    lineHeight: 22,
     marginTop: 16,
     alignSelf: "center",
     color: "rgba(27, 67, 113, 1)",
+  },
+
+  navigationText: {
+    color: "#00008b",
   },
 });
